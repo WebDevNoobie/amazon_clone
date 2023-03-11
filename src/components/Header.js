@@ -1,13 +1,21 @@
 import React from 'react'
 import Image from 'next/image'
 import { Bars3Icon, ShoppingCartIcon, MagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import { signIn,signOut,useSession } from 'next-auth/react'
+import { useRouter } from 'next/router'
+import { useSelector } from 'react-redux'
+import { selectItems } from '../slices/basketSlice'
 
 function Header() {
+  const items = useSelector(selectItems)
+  const { data: session } = useSession()
+  const router = useRouter()
   return (
     <header>
         <div className='flex bg-amazon_blue p-1 py-2 items-center flex-grow'>
             <div className='mt-2 flex flex-grow sm:flex-grow-0 items-center'>
               <Image
+                onClick={()=>router.push('/')}
                 src='https://links.papareact.com/f90'
                 width={150}
                 height={40}
@@ -20,16 +28,16 @@ function Header() {
               <MagnifyingGlassIcon className='h-12 p-4'/>
             </div>
             <div className='text-white flex items-center text-xs space-x-6 mx-6 whitespace-nowrap'>
-              <div className='link'>
-                <p>Hello Yuvraj</p>
+              <div onClick={session ? signOut : signIn} className='link'>
+                <p>{session ? `Hello ${session.user.name}` : 'Sign In'}</p>
                 <p className='font-extrabold md:text-sm'>Account & Lists</p>
               </div>
               <div className='link'>
                 <p>Returns</p>
                 <p className='font-extrabold md:text-sm'>& Orders</p>
               </div>
-              <div className='link relative flex items-center'>
-                <span className='absolute top-0 right-0 md:right-12 h-4 w-4 bg-yellow-400 text-center text-black rounded-full font-bold'>0</span>
+              <div onClick={()=>router.push('/checkout')} className='link relative flex items-center'>
+                <span className='absolute top-0 right-0 md:right-12 h-4 w-4 bg-yellow-400 text-center text-black rounded-full font-bold'>{items.length}</span>
                 <ShoppingCartIcon className='h-10'/>
                 <p className='hidden md:inline font-extrabold md:text-sm mt-2'>Basket</p>
               </div>
