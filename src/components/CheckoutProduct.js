@@ -2,8 +2,14 @@ import React from 'react'
 import Image from 'next/image'
 import { StarIcon } from '@heroicons/react/24/solid'
 import CurrencyFormatter from 'currency-formatter-react'
+import { useDispatch } from 'react-redux'
+import { removeFromBasket } from '../slices/basketSlice'
 
 function CheckoutProduct({id,title,price,description,category,image,hasPrime,rating}) {
+    const dispatch = useDispatch()
+    const removeItemFromBasket = () => {
+        dispatch(removeFromBasket(id))
+    }
   return (
     <div className='grid grid-cols-5'>
         <Image src={image} height={200} width={200} objectFit='contain'/>
@@ -22,7 +28,7 @@ function CheckoutProduct({id,title,price,description,category,image,hasPrime,rat
             </div>)}
         </div>
         <div className='flex flex-col space-y-2 my-auto justify-self-end'>
-            <button className='button'>Remove from Basket</button>
+            <button onClick={removeItemFromBasket} className='button'>Remove from Basket</button>
         </div>
     </div>
   )
